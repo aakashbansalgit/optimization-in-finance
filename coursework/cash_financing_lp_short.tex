@@ -1,0 +1,55 @@
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+
+\title{Optimization in Finance --- HW2 \\ \large Q1 (Part 1): LP Formulation}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% ---------- Problem data (concise) ----------
+\noindent\textbf{Data.}\;
+Months $t=1,\ldots,6$. Operating cash flows (before financing):
+\[
+\mathrm{CF}_1=50,\ \mathrm{CF}_2=-100,\ \mathrm{CF}_3=-150,\ \mathrm{CF}_4=200,\ \mathrm{CF}_5=-300,\ \mathrm{CF}_6=400.
+\]
+Credit line: monthly rate $r_{\mathrm{CL}}$, capacity $100$.
+Commercial papers $j=1,\ldots,5$ with $(i_j,m_j,c_j)$:
+\[
+(1,2,0.02),\ (1,4,0.025),\ (2,5,0.035),\ (3,6,0.02),\ (4,6,0.03).
+\]
+
+% ---------- Variables ----------
+\medskip
+\noindent\textbf{Decision variables.}\;
+$s_t\ge0$ end-of-month cash;\; $b_t\ge0$ credit-line balance;\; $l_t\ge0$ draw, $r_t\ge0$ repay (month $t$);\; $y_j\ge0$ CP $j$ issued.
+
+% ---------- Objective ----------
+\medskip
+\noindent\textbf{Objective.}
+\[
+\max\ s_6.
+\]
+
+% ---------- Constraints ----------
+\noindent\textbf{Constraints.}
+\begin{align}
+& b_t=b_{t-1}+l_t-r_t, && t=1,\dots,6, \label{eq:bal}\\
+& 0\le b_t\le 100, && t=1,\dots,6, \label{eq:cap}\\
+& b_6=0,\quad b_0=0, \label{eq:term}\\[2pt]
+& s_t = s_{t-1} + \mathrm{CF}_t
+  + \sum_{\substack{j:\\ i_j=t}} y_j
+  - \sum_{\substack{j:\\ m_j=t}} (1+c_j)\,y_j
+  + l_t - r_t
+  - r_{\mathrm{CL}}\,b_{t-1},
+&& t=1,\dots,6, \label{eq:cash}\\
+& s_t \ge 0, && t=1,\dots,6,\qquad s_0=0. \label{eq:nobank}
+\end{align}
+
+\vspace{-0.5em}
+\noindent All constraints and the objective are linear, hence this is a linear program.
+\end{document}

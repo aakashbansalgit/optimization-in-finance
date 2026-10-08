@@ -1,0 +1,4 @@
+,annual_return,annual_vol,mad_monthly,worst_month,max_drawdown,annual_turnover,avg_holdings
+minimum MAD,0.0371,0.0474,0.0098,-0.0440,0.1574,0.3544,2.7192
+minimum variance,0.0360,0.0466,0.0096,-0.0444,0.1557,0.1801,2.5567
+equal weight,0.1204,0.1348,0.0290,-0.1315,0.2114,0.0000,10.0000

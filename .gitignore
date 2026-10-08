@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
+*.aux
+*.log
+*.pdf
+.DS_Store

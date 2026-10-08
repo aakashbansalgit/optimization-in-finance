@@ -1,0 +1,133 @@
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\setlist{nosep}
+
+\title{Cash-Flow Financing over Six Months: Linear Programming Formulation}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Overview}
+
+A firm faces known monthly operating cash flows over six months and can use (i) a revolving credit line with a per-month interest rate and a capacity limit, and (ii) date-specific commercial papers (CPs) that provide an inflow at their issue month and require principal+coupon repayment at maturity. Positive cash earns no interest. The firm must keep the end-of-month cash balance nonnegative each month and repay all debt by the end of month 6. The objective is to maximize cash at the end of month 6. This note presents a clean linear programming (LP) model in the same style as the course slides, along with an equivalent compact variant and the explicit month-by-month equations instantiated with the given data.
+
+\section*{Problem Data}
+
+\paragraph{Timeline and operating cash flows.} Months $t=1,\dots,6$ with operating cash flows (before financing)
+\[
+\mathrm{CF}_1=50,\quad \mathrm{CF}_2=-100,\quad \mathrm{CF}_3=-150,\quad \mathrm{CF}_4=200,\quad \mathrm{CF}_5=-300,\quad \mathrm{CF}_6=400.
+\]
+
+\paragraph{Credit line.} Monthly interest rate $r_{\mathrm{CL}}$ (e.g., $0.015$ for Q2 or $0.025$ for Q3), capacity $\mathrm{cap}=100$.
+
+\paragraph{Commercial papers.} Five instruments indexed by $j=1,\dots,5$, each with (issue month $i_j$, maturity month $m_j$, coupon rate $c_j$):
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+$j$ & $i_j$ & $m_j$ & $c_j$ \\
+\midrule
+1 & 1 & 2 & 0.02 \\
+2 & 1 & 4 & 0.025 \\
+3 & 2 & 5 & 0.035 \\
+4 & 3 & 6 & 0.02 \\
+5 & 4 & 6 & 0.03 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Sets, Parameters, and Decision Variables}
+
+\paragraph{Sets/indices.} $t \in \{1,\ldots,6\}$; $j \in \{1,\ldots,5\}$.
+
+\paragraph{Parameters.} Operating cash flow $\mathrm{CF}_t$; credit-line rate $r_{\mathrm{CL}}$ and capacity $\mathrm{cap}$; CP data $(i_j,m_j,c_j)$.
+
+\paragraph{Decision variables.}
+\begin{itemize}
+\item $s_t \ge 0$: end-of-month cash balance.
+\item $b_t \ge 0$: credit-line balance at end of month $t$.
+\item $l_t \ge 0$, $r_t \ge 0$: credit-line draw and repayment in month $t$.
+\item $y_j \ge 0$: face amount of CP $j$ to issue.
+\end{itemize}
+
+\section*{LP Model (Slides-Style with Draw/Repay Variables)}
+
+\paragraph{Objective.} Maximize end-of-horizon cash:
+\begin{equation}
+\max \ s_6.
+\end{equation}
+
+\paragraph{Credit-line balance recursion and capacity:}
+\begin{align}
+b_t &= b_{t-1} + l_t - r_t, && t=1,\dots,6, \label{eq:balrec}\\
+0 \;\le\; b_t &\le \mathrm{cap}, && t=1,\dots,6, \label{eq:cap}\\
+b_6 &= 0, \qquad b_0=0. \label{eq:terminal}
+\end{align}
+
+\paragraph{Cash-balance recursion (interest charged on beginning-of-month balance $b_{t-1}$):}
+\begin{align}
+s_t
+= s_{t-1} + \mathrm{CF}_t
++ \sum_{\substack{j:\\ i_j=t}} y_j
+- \sum_{\substack{j:\\ m_j=t}} (1+c_j)\, y_j
++ l_t - r_t
+- r_{\mathrm{CL}}\, b_{t-1},
+\qquad t=1,\dots,6, \label{eq:cash}
+\end{align}
+with $s_0=0$.
+
+\paragraph{No-bankruptcy (nonnegative end-of-month cash):}
+\begin{equation}
+s_t \ge 0,\qquad t=1,\dots,6. \label{eq:nobank}
+\end{equation}
+
+\section*{Equivalent Compact Formulation (Fewer Variables)}
+
+Eliminate $l_t,r_t$ and use $l_t - r_t = b_t - b_{t-1}$:
+\begin{align}
+\max\ & s_6 \nonumber\\
+\text{s.t. }\
+& s_t
+= s_{t-1} + \mathrm{CF}_t
++ \sum_{\substack{j:\\ i_j=t}} y_j
+- \sum_{\substack{j:\\ m_j=t}} (1+c_j)\, y_j
++ (b_t - b_{t-1})
+- r_{\mathrm{CL}}\, b_{t-1},
+&& t=1,\dots,6, \label{eq:cashcompact}\\
+& 0 \le b_t \le \mathrm{cap},\quad s_t \ge 0, && t=1,\dots,6, \label{eq:capcompact}\\
+& b_6=0,\quad s_0=b_0=0,\quad y_j\ge 0. \label{eq:termcompact}
+\end{align}
+
+\section*{Month-by-Month Expanded Cash Equations (Instantiated Data)}
+
+Let $c_1=0.02$, $c_2=0.025$, $c_3=0.035$, $c_4=0.02$, $c_5=0.03$. Using \eqref{eq:cash} and the given $\mathrm{CF}_t$ values,
+\begin{align*}
+s_1 &= 0 + 50 + (y_1+y_2) + l_1 - r_1 - r_{\mathrm{CL}}\, b_0,\\
+s_2 &= s_1 - 100 + y_3 - (1+c_1)y_1 + l_2 - r_2 - r_{\mathrm{CL}}\, b_1,\\
+s_3 &= s_2 - 150 + y_4 + l_3 - r_3 - r_{\mathrm{CL}}\, b_2,\\
+s_4 &= s_3 + 200 + y_5 - (1+c_2)y_2 + l_4 - r_4 - r_{\mathrm{CL}}\, b_3,\\
+s_5 &= s_4 - 300 - (1+c_3)y_3 + l_5 - r_5 - r_{\mathrm{CL}}\, b_4,\\
+s_6 &= s_5 + 400 - (1+c_4)y_4 - (1+c_5)y_5 + l_6 - r_6 - r_{\mathrm{CL}}\, b_5.
+\end{align*}
+
+\paragraph{Feasibility and linearity.} The model is linear: the objective $\max s_6$ and all constraints \eqref{eq:balrec}--\eqref{eq:nobank} (or \eqref{eq:cashcompact}--\eqref{eq:termcompact}) are linear in the variables. No products of variables appear. The nonnegativity of $s_t$ enforces ``no bankruptcy'' each month. Setting $b_6=0$ ensures all credit-line debt is repaid at the horizon; CP maturities are enforced by the cash recursion via their $(1+c_j)y_j$ outflows at $m_j$.
+
+\section*{How to Use for Q2 and Q3}
+
+To solve the problem instances:
+\begin{itemize}
+\item Q2: set $r_{\mathrm{CL}}=0.015$.
+\item Q3: set $r_{\mathrm{CL}}=0.025$.
+\end{itemize}
+All other data remain the same. The compact formulation is often convenient for implementation; both versions are equivalent.
+
+\bigskip
+\noindent\textbf{Remark.} If desired, one can augment the model with explicit variables for beginning-of-month cash and interest accrual conventions; the chosen convention here (interest charged on $b_{t-1}$ in month $t$) is standard and preserves linearity.
+
+\end{document}
