@@ -1,5 +1,10 @@
-# optimization-in-finance
+# lp-finance
 
+[![tests](https://github.com/aakashbansalgit/lp-finance/actions/workflows/tests.yml/badge.svg)](https://github.com/aakashbansalgit/lp-finance/actions/workflows/tests.yml)
+
+Three linear programs from finance: a cash financing plan read through its dual prices, Treasury dedication against immunization under curve shifts, and mean-absolute-deviation against minimum-variance portfolios out of sample.
+
+![](figures/portfolios.png)
 Three linear programs from corporate finance and asset management, each solved with open-source solvers and checked against something independent. They grew out of Optimization in Finance at the University of Illinois. `coursework/` keeps the original Gurobi notebook and the LaTeX write-up of the first problem.
 
 ## 1. Financing six months of cash flows
